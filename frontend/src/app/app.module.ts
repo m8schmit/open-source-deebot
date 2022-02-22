@@ -8,11 +8,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventStreamComponent } from './components/event-stream/event-stream.component';
 import { IonicModule } from '@ionic/angular';
+import { BatteryStateComponent } from './components/battery-state/battery-state.component';
 
 const config: SocketIoConfig = { url: environment.socket, options: {} };
 
 @NgModule({
-  declarations: [AppComponent, EventStreamComponent],
+  declarations: [AppComponent, EventStreamComponent, BatteryStateComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

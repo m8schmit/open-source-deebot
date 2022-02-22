@@ -1,0 +1,30 @@
+<div class="battery-state" *ngIf="isCharging">
+  <ng-container *ngIf="isCharging == 'charging'; else notCharging">
+    <ion-icon
+      class="battery-state__icon battery-state__icon--green"
+      name="battery-charging-outline"
+    ></ion-icon>
+    -
+    {{ isCharging }}
+  </ng-container>
+  <ng-template #notCharging>
+    <ng-container *ngIf="batteryLevel">
+      <ion-icon
+        class="battery-state__icon battery-state__icon--green"
+        *ngIf="batteryLevel >= 50 && batteryLevel <= 100"
+        name="battery-full-outline"
+      ></ion-icon>
+      <ion-icon
+        class="battery-state__icon battery-state__icon--orange"
+        *ngIf="batteryLevel >= 10 && batteryLevel < 50"
+        name="battery-half-outline"
+      ></ion-icon>
+      <ion-icon
+        class="battery-state__icon battery-state__icon--red"
+        *ngIf="batteryLevel < 10"
+        name="battery-dead-outline"
+      ></ion-icon>
+      <small>{{ batteryLevel }}%</small>
+    </ng-container>
+  </ng-template>
+</div>

@@ -1,0 +1,17 @@
+.battery-state {
+  padding: 0 15px;
+  display: flex;
+
+  &__icon {
+    font-size: 20px;
+    padding-right: 5px;
+    &--green {
+      color: green;
+    }
+  }
+
+  // ion-icon {
+  //   font-size: 20px;
+  //   padding-right: 5px;
+  // }
+}

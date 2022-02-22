@@ -27,7 +27,7 @@ export const connectToDeebot = async () => {
         continent
       );
 
-      // logVacbotData(vacbot);
+      logVacbotData(vacbot, EcoVacsAPI);
       // console.log(vacbot.ecovacs.bot.vacuum);
 
       vacbot.connect();
@@ -39,7 +39,7 @@ export const connectToDeebot = async () => {
   });
 };
 
-const logVacbotData = (vacbot) => {
+const logVacbotData = (vacbot, EcoVacsAPI) => {
   console.log('[Logs] name: ' + vacbot.getDeviceProperty('name'));
   console.log('[Logs] isKnownDevice: ' + vacbot.isKnownDevice());
   console.log('[Logs] isSupportedDevice: ' + vacbot.isSupportedDevice());

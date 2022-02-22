@@ -1,19 +1,30 @@
-<!-- <p>Battery state: {{ listenToEvent("ChargeState") | async }}</p>
-<p>Currently at: {{ listenToEvent("BatteryInfo") | async }}%</p> -->
-
 <ion-header>
   <ng-container *ngIf="listenToEvent('NickName') | async as nameProperties">
-    <ion-toolbar>
-      <ion-title>{{ nameProperties.name }}</ion-title>
+    <ion-toolbar class->
+      <ion-title>{{ nameProperties.name }} </ion-title>
+      <ng-container *ngIf="listenToEvent('ChargeState') | async as isCharging">
+        <ng-container
+          *ngIf="listenToEvent('BatteryInfo') | async as batteryLevel"
+        >
+          <app-battery-state
+            [isCharging]="isCharging"
+            [batteryLevel]="batteryLevel"
+            slot="primary"
+          ></app-battery-state>
+        </ng-container>
+      </ng-container>
     </ion-toolbar>
 
     <ion-toolbar>
-      <ion-title  size="small">{{ nameProperties.model }}</ion-title>
+      <ion-title size="small">{{ nameProperties.model }}</ion-title>
     </ion-toolbar>
   </ng-container>
 </ion-header>
 
 <ion-content>
+  <div *ngIf="listenToEvent('GetMaps') | async as maps">
+    {{maps}}
+  </div>
   <div>
     <ion-fab vertical="center" horizontal="center" edge slot="fixed">
       <ion-fab-button>

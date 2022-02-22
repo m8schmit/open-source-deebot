@@ -34,6 +34,11 @@ connectToDeebot().then((vacbot) => {
       socket.emit('BatteryInfo', state);
     });
 
+    vacbot.on('MapImage', (value) => {
+      logEvent('send', 'MapImage', payload);
+      socket.emit('MapImage', value['mapBase64PNG']);
+    });
+
     socket.on('getName', (payload) => {
       logEvent('receive', 'getName', payload);
       const name = {
@@ -53,11 +58,43 @@ connectToDeebot().then((vacbot) => {
       logEvent('receive', 'Charge', payload);
       vacbot.run('Charge');
     });
+
+    socket.on('GetBatteryState', (payload) => {
+      logEvent('receive', 'GetBatteryState', payload);
+      vacbot.run('GetBatteryState');
+    });
+
+    socket.on('GetChargeState', (payload) => {
+      logEvent('receive', 'GetChargeState', payload);
+      vacbot.run('GetChargeState');
+    });
+
+    socket.on('GetMaps', (payload) => {
+      logEvent('receive', 'GetMaps', payload);
+      const createMapDataObject = true; // default = false
+      const createMapImage = false; // default = createMapDataObject && vacbot.isMapImageSupported();
+      vacbot.run('GetMaps', createMapDataObject, createMapImage);
+    });
   });
 
+  // TODO
+  // process.on('SIGINT', function () {
+  //   console.log('\nGracefully shutting down from SIGINT (Ctrl+C)');
+  //   disconnect(vacbot);
+  // });
   httpServer.listen(port, () => console.log(`listening on *:${port}`));
 });
 
 const logEvent = (direction, name, payload) => {
-  console.log(`[${direction}] ${name} - with: ${payload}`);
+  console.log(`[${direction}] ${name} - with: `, payload);
 };
+
+function disconnect(vacbot) {
+  try {
+    vacbot.disconnect();
+  } catch (e) {
+    console.log('Failure in disconnecting: ', e.message);
+  }
+  console.log('Exiting...');
+  process.exit();
+}
