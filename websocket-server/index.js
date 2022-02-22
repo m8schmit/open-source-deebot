@@ -34,9 +34,17 @@ connectToDeebot().then((vacbot) => {
       socket.emit('BatteryInfo', state);
     });
 
-    vacbot.on('MapImage', (value) => {
-      logEvent('send', 'MapImage', payload);
-      socket.emit('MapImage', value['mapBase64PNG']);
+    vacbot.on('Maps', ({ maps }) => {
+      const mapID = maps.find(
+        (currentMap) => currentMap.mapIsCurrentMap === true
+      ).mapID;
+      logEvent('receive', 'Maps', { maps, mapID });
+      vacbot.run('GetMapImage', mapID, 'outline');
+    });
+
+    vacbot.on('MapImage', (payload) => {
+      logEvent('send', 'MapImage', payload['mapBase64PNG']);
+      socket.emit('MapImage', payload['mapBase64PNG']);
     });
 
     socket.on('getName', (payload) => {
@@ -73,7 +81,7 @@ connectToDeebot().then((vacbot) => {
       logEvent('receive', 'GetMaps', payload);
       const createMapDataObject = true; // default = false
       const createMapImage = false; // default = createMapDataObject && vacbot.isMapImageSupported();
-      vacbot.run('GetMaps', createMapDataObject, createMapImage);
+      vacbot.run('GetMaps');
     });
   });
 

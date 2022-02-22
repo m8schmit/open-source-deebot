@@ -22,8 +22,8 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="listenToEvent('GetMaps') | async as maps">
-    {{maps}}
+  <div *ngIf="listenToEvent('MapImage') | async as mapPNG">
+    <img [src]="mapPNG" />
   </div>
   <div>
     <ion-fab vertical="center" horizontal="center" edge slot="fixed">
