@@ -25,22 +25,37 @@
   <div *ngIf="listenToEvent('MapImage') | async as mapPNG">
     <img [src]="mapPNG" />
   </div>
-  <div>
-    <ion-fab vertical="center" horizontal="center" edge slot="fixed">
+
+  <ng-container *ngIf="listenToEvent('CleanReport') | async as cleanStatus">
+    {{cleanStatus}}
+    <ion-fab
+      *ngIf="cleanStatus === 'pause' || cleanStatus === 'idle'"
+      vertical="bottom"
+      horizontal="center"
+      edge
+      slot="fixed"
+    >
       <ion-fab-button>
         <ion-icon (click)="startCleaning()" name="play"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab vertical="center" horizontal="start" edge slot="fixed">
+    <ion-fab
+      *ngIf="cleanStatus !== 'pause'"
+      vertical="bottom"
+      horizontal="center"
+      edge
+      slot="fixed"
+    >
       <ion-fab-button>
-        <ion-icon (click)="returnToHome()" name="home"></ion-icon>
+        <ion-icon (click)="pauseCleaning()" name="pause"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-  </div>
+  </ng-container>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
-    <ion-title>Footer</ion-title>
-  </ion-toolbar>
+    <ion-button slot="start" (click)="returnToHome()" size="small">
+      <ion-icon name="home"></ion-icon></ion-button
+  ></ion-toolbar>
 </ion-footer>

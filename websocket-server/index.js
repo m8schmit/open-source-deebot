@@ -22,6 +22,8 @@ connectToDeebot().then((vacbot) => {
     console.log(socket.id);
     vacbot.run('GetChargeState');
     vacbot.run('GetBatteryState');
+    vacbot.run('GetCleanState');
+
 
     vacbot.on('ChargeState', (state) => {
       logEvent('send', 'ChargeState', state);
@@ -32,6 +34,11 @@ connectToDeebot().then((vacbot) => {
       logEvent('send', 'BatteryInfo', state);
 
       socket.emit('BatteryInfo', state);
+    });
+
+    vacbot.on('CleanReport', (state) => {
+      logEvent('send', 'CleanReport', state);
+      socket.emit('CleanReport', state);
     });
 
     vacbot.on('Maps', ({ maps }) => {
@@ -67,6 +74,11 @@ connectToDeebot().then((vacbot) => {
       vacbot.run('Charge');
     });
 
+    socket.on('Pause', (payload) => {
+      logEvent('receive', 'Pause', payload);
+      vacbot.run('Pause');
+    });
+
     socket.on('GetBatteryState', (payload) => {
       logEvent('receive', 'GetBatteryState', payload);
       vacbot.run('GetBatteryState');
@@ -75,6 +87,11 @@ connectToDeebot().then((vacbot) => {
     socket.on('GetChargeState', (payload) => {
       logEvent('receive', 'GetChargeState', payload);
       vacbot.run('GetChargeState');
+    });
+
+    socket.on('GetCleanState', (payload) => {
+      logEvent('receive', 'GetCleanState', payload);
+      vacbot.run('GetCleanState');
     });
 
     socket.on('GetMaps', (payload) => {
