@@ -25,9 +25,12 @@
   <div *ngIf="listenToEvent('MapImage') | async as mapPNG">
     <img [src]="mapPNG" />
   </div>
+  <ng-container *ngIf="listenToEvent('Schedule') | async as SchedulesList">
+    {{ SchedulesList }}
+  </ng-container>
 
   <ng-container *ngIf="listenToEvent('CleanReport') | async as cleanStatus">
-    {{cleanStatus}}
+    {{ cleanStatus }}
     <ion-fab
       *ngIf="cleanStatus === 'pause' || cleanStatus === 'idle'"
       vertical="bottom"

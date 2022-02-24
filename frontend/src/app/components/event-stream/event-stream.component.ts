@@ -14,7 +14,7 @@ export class EventStreamComponent implements OnInit {
 
   ngOnInit() {
     this.socketService.dispatch('getName', {});
-    // this.socketService.dispatch('GetMaps', {});
+    this.socketService.dispatch('GetMaps', {});
   }
 
   ngOnDestroy(): void {}

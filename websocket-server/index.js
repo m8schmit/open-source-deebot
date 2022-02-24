@@ -23,7 +23,8 @@ connectToDeebot().then((vacbot) => {
     vacbot.run('GetChargeState');
     vacbot.run('GetBatteryState');
     vacbot.run('GetCleanState');
-
+    vacbot.run('GetSchedule');
+    vacbot.run('GetWaterBoxInfo');
 
     vacbot.on('ChargeState', (state) => {
       logEvent('send', 'ChargeState', state);
@@ -41,12 +42,27 @@ connectToDeebot().then((vacbot) => {
       socket.emit('CleanReport', state);
     });
 
+    vacbot.on('Schedule', (payload) => {
+      logEvent('send', 'Schedule', JSON.stringify(payload));
+      socket.emit('Schedule', JSON.stringify(payload));
+    });
+
+    vacbot.on('WaterBoxInfo', (payload) => {
+      logEvent('send', 'WaterBoxInfo', payload);
+      socket.emit('WaterBoxInfo', payload);
+    });
+
     vacbot.on('Maps', ({ maps }) => {
       const mapID = maps.find(
         (currentMap) => currentMap.mapIsCurrentMap === true
       ).mapID;
       logEvent('receive', 'Maps', { maps, mapID });
-      vacbot.run('GetMapImage', mapID, 'outline');
+      vacbot.run('GetMapImage', mapID);
+      vacbot.run('GetVirtualBoundaries', mapID);
+    });
+
+    vacbot.on('MapDataObject', (mapDataObject) => {
+      logEvent('send', 'MapDataObject', JSON.stringify(mapDataObject));
     });
 
     vacbot.on('MapImage', (payload) => {
@@ -98,7 +114,7 @@ connectToDeebot().then((vacbot) => {
       logEvent('receive', 'GetMaps', payload);
       const createMapDataObject = true; // default = false
       const createMapImage = false; // default = createMapDataObject && vacbot.isMapImageSupported();
-      vacbot.run('GetMaps');
+      vacbot.run('GetMaps', createMapDataObject, createMapImage);
     });
   });
 
@@ -111,7 +127,11 @@ connectToDeebot().then((vacbot) => {
 });
 
 const logEvent = (direction, name, payload) => {
-  console.log(`[${direction}] ${name} - with: `, payload);
+  let directionLabel = `\x1b[42m\x1b[1m\x1b[37m[${direction}]\x1b[0m\x1b[0m\x1b[0m`;
+  if (direction === 'send') {
+    directionLabel = `\x1b[46m\x1b[1m\x1b[37m[${direction}]\x1b[0m\x1b[0m\x1b[0m`;
+  }
+  console.log(`${directionLabel} ${name} - with: `, payload);
 };
 
 function disconnect(vacbot) {

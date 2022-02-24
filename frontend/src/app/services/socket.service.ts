@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Observable } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocketService {
-
   constructor(private socket: Socket) {}
 
   public listenToEvent(messageType: string): Observable<any> {
