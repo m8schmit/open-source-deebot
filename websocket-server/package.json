@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
+    "tsc": "./node_modules/.bin/tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "tsc && node dist/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,11 @@
     "dotenv": "^16.0.0",
     "ecovacs-deebot": "^0.7.1",
     "node-machine-id": "^1.1.12",
-    "socket.io": "^4.2.0"
+    "socket.io": "^4.2.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.5"
   }
 }
+
+
+// npx -p typescript tsc --declaration --allowJs --emitDeclarationOnly --outDir types

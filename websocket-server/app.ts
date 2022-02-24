@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import VacBot_950type from 'ecovacs-deebot/library/vacBot_950type';
+import VacBot_non950type from 'ecovacs-deebot/library/vacBot_non950type';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
@@ -16,7 +18,7 @@ const io = new Server(httpServer, {
 
 const port = 8081;
 
-connectToDeebot().then((vacbot) => {
+connectToDeebot().then((vacbot: VacBot_950type | VacBot_non950type) => {
   io.on('connection', (socket) => {
     console.log('New client connected');
     console.log(socket.id);
@@ -26,46 +28,46 @@ connectToDeebot().then((vacbot) => {
     vacbot.run('GetSchedule');
     vacbot.run('GetWaterBoxInfo');
 
-    vacbot.on('ChargeState', (state) => {
+    vacbot.on('ChargeState', (state: any) => {
       logEvent('send', 'ChargeState', state);
       socket.emit('ChargeState', state);
     });
 
-    vacbot.on('BatteryInfo', (state) => {
+    vacbot.on('BatteryInfo', (state: any) => {
       logEvent('send', 'BatteryInfo', state);
 
       socket.emit('BatteryInfo', state);
     });
 
-    vacbot.on('CleanReport', (state) => {
+    vacbot.on('CleanReport', (state: any) => {
       logEvent('send', 'CleanReport', state);
       socket.emit('CleanReport', state);
     });
 
-    vacbot.on('Schedule', (payload) => {
+    vacbot.on('Schedule', (payload: any) => {
       logEvent('send', 'Schedule', JSON.stringify(payload));
       socket.emit('Schedule', JSON.stringify(payload));
     });
 
-    vacbot.on('WaterBoxInfo', (payload) => {
+    vacbot.on('WaterBoxInfo', (payload: any) => {
       logEvent('send', 'WaterBoxInfo', payload);
       socket.emit('WaterBoxInfo', payload);
     });
 
-    vacbot.on('Maps', ({ maps }) => {
+    vacbot.on('Maps', ({ maps }: any) => {
       const mapID = maps.find(
-        (currentMap) => currentMap.mapIsCurrentMap === true
+        (currentMap: any) => currentMap.mapIsCurrentMap === true
       ).mapID;
       logEvent('receive', 'Maps', { maps, mapID });
       vacbot.run('GetMapImage', mapID);
       vacbot.run('GetVirtualBoundaries', mapID);
     });
 
-    vacbot.on('MapDataObject', (mapDataObject) => {
+    vacbot.on('MapDataObject', (mapDataObject: any) => {
       logEvent('send', 'MapDataObject', JSON.stringify(mapDataObject));
     });
 
-    vacbot.on('MapImage', (payload) => {
+    vacbot.on('MapImage', (payload: any) => {
       logEvent('send', 'MapImage', payload['mapBase64PNG']);
       socket.emit('MapImage', payload['mapBase64PNG']);
     });
@@ -126,7 +128,7 @@ connectToDeebot().then((vacbot) => {
   httpServer.listen(port, () => console.log(`listening on *:${port}`));
 });
 
-const logEvent = (direction, name, payload) => {
+const logEvent = (direction: eventDirection, name: string, payload: any) => {
   let directionLabel = `\x1b[42m\x1b[1m\x1b[37m[${direction}]\x1b[0m\x1b[0m\x1b[0m`;
   if (direction === 'send') {
     directionLabel = `\x1b[46m\x1b[1m\x1b[37m[${direction}]\x1b[0m\x1b[0m\x1b[0m`;
@@ -134,12 +136,14 @@ const logEvent = (direction, name, payload) => {
   console.log(`${directionLabel} ${name} - with: `, payload);
 };
 
-function disconnect(vacbot) {
+function disconnect(vacbot: VacBot_950type | VacBot_non950type) {
   try {
     vacbot.disconnect();
-  } catch (e) {
+  } catch (e: any) {
     console.log('Failure in disconnecting: ', e.message);
   }
   console.log('Exiting...');
   process.exit();
 }
+
+type eventDirection = 'send' | 'receive';
