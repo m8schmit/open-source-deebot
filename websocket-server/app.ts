@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
-import VacBot_950type from 'ecovacs-deebot/library/vacBot_950type';
-import VacBot_non950type from 'ecovacs-deebot/library/vacBot_non950type';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
 import { connectToDeebot } from './ecovacs-mqtt.js';
+import VacBot_950type from './types/ecovacs-deebot/library/950type/vacBot.js';
+import VacBot_non950type from './types/ecovacs-deebot/library/non950type/vacBot.js';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ const io = new Server(httpServer, {
 
 const port = 8081;
 
-connectToDeebot().then((vacbot: VacBot_950type | VacBot_non950type) => {
+connectToDeebot().then((vacbot) => {
   io.on('connection', (socket) => {
     console.log('New client connected');
     console.log(socket.id);

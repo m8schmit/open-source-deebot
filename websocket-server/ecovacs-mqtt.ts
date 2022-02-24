@@ -1,48 +1,49 @@
-import ecovacsDeebot from 'ecovacs-deebot';
-import { CN } from 'ecovacs-deebot/countries';
-import VacBot_950type from 'ecovacs-deebot/library/vacBot_950type';
-import VacBot_non950type from 'ecovacs-deebot/library/vacBot_non950type';
+import { countries, EcoVacsAPI } from 'ecovacs-deebot';
 import { machineIdSync } from 'node-machine-id';
 
-export const connectToDeebot = async (): Promise< VacBot_950type | VacBot_non950type> => {
-  const { countries, EcoVacsAPI } = ecovacsDeebot;
+import VacBot_950type from './types/ecovacs-deebot/library/950type/vacBot';
+import VacBot_non950type from './types/ecovacs-deebot/library/non950type/vacBot';
+
+export const connectToDeebot = (): Promise<VacBot_950type | VacBot_non950type> => {
+  // const { countries, EcoVacsAPI } = ecovacsDeebot;
 
   const account_id = process.env.ACCOUNT_ID;
   const password = process.env.PASSWORD;
-  const countryCode = process.env.COUNTRYCODE as any || CN;
+  const countryCode = process.env.COUNTRYCODE || 'cn';
 
   const password_hash = EcoVacsAPI.md5(password);
   const device_id = EcoVacsAPI.getDeviceId(machineIdSync());
-  const continent = countries.CN.continent.toLowerCase();
+  const continent = countries[countryCode].continent.toLowerCase();
 
   const api = new EcoVacsAPI(device_id, countryCode, continent);
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     return api.connect(account_id, password_hash).then(async () => {
-      const devices = await api.devices();
-      const vacuum = devices[0];
-      const vacbot = api.getVacBot(
-        api.uid,
-        EcoVacsAPI.REALM,
-        api.resource,
-        api.user_access_token,
-        vacuum,
-        continent
-      );
+      return api.devices().then((devicesList) => {
+        const vacuum = devicesList[0];
+        const vacbot = api.getVacBot(
+          api.uid,
+          EcoVacsAPI.REALM,
+          api.resource,
+          api.user_access_token,
+          vacuum,
+          continent
+        );
 
-      logVacbotData(vacbot, EcoVacsAPI);
-      // console.log(vacbot.ecovacs.bot.vacuum);
+        logVacbotData(vacbot, EcoVacsAPI);
+        // console.log(vacbot.ecovacs.bot.vacuum);
 
-      vacbot.connect();
-      vacbot.on('ready', (event: any) => {
-        console.log('vacbot ready', event);
-        return resolve(vacbot);
+        vacbot.connect();
+        vacbot.on('ready', (event: any) => {
+          console.log('vacbot ready', event);
+          return resolve(vacbot);
+        });
       });
     });
   });
 };
 
-const logVacbotData = (vacbot: VacBot_950type | VacBot_non950type, EcoVacsAPI: typeof ecovacsDeebot.EcoVacsAPI) => {
+const logVacbotData = (vacbot: any, EcoVacsAPI: any): void => {
   console.log('[Logs] name: ' + vacbot.getDeviceProperty('name'));
   console.log('[Logs] isKnownDevice: ' + vacbot.isKnownDevice());
   console.log('[Logs] isSupportedDevice: ' + vacbot.isSupportedDevice());
