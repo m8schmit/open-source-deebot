@@ -1,12 +1,12 @@
 import { countries, EcoVacsAPI } from 'ecovacs-deebot';
 import { machineIdSync } from 'node-machine-id';
 
-import VacBot_950type from './types/ecovacs-deebot/library/950type/vacBot';
-import VacBot_non950type from './types/ecovacs-deebot/library/non950type/vacBot';
+import VacBot_950type from '../types/ecovacs-deebot/library/950type/vacBot';
+import VacBot_non950type from '../types/ecovacs-deebot/library/non950type/vacBot';
 
-export const connectToDeebot = (): Promise<VacBot_950type | VacBot_non950type> => {
-  // const { countries, EcoVacsAPI } = ecovacsDeebot;
-
+export const connectToDeebot = (): Promise<
+  VacBot_950type | VacBot_non950type
+> => {
   const account_id = process.env.ACCOUNT_ID;
   const password = process.env.PASSWORD;
   const countryCode = process.env.COUNTRYCODE || 'cn';
@@ -17,9 +17,9 @@ export const connectToDeebot = (): Promise<VacBot_950type | VacBot_non950type> =
 
   const api = new EcoVacsAPI(device_id, countryCode, continent);
 
-  return new Promise(async (resolve, reject) => {
-    return api.connect(account_id, password_hash).then(async () => {
-      return api.devices().then((devicesList) => {
+  return new Promise(async (resolve, reject) =>
+    api.connect(account_id, password_hash).then(async () =>
+      api.devices().then((devicesList: any) => {
         const vacuum = devicesList[0];
         const vacbot = api.getVacBot(
           api.uid,
@@ -38,12 +38,15 @@ export const connectToDeebot = (): Promise<VacBot_950type | VacBot_non950type> =
           console.log('vacbot ready', event);
           return resolve(vacbot);
         });
-      });
-    });
-  });
+      })
+    )
+  );
 };
 
-const logVacbotData = (vacbot: any, EcoVacsAPI: any): void => {
+const logVacbotData = (
+  vacbot: VacBot_950type | VacBot_non950type,
+  ecovacsAPI: typeof EcoVacsAPI
+): void => {
   console.log('[Logs] name: ' + vacbot.getDeviceProperty('name'));
   console.log('[Logs] isKnownDevice: ' + vacbot.isKnownDevice());
   console.log('[Logs] isSupportedDevice: ' + vacbot.isSupportedDevice());
@@ -66,6 +69,6 @@ const logVacbotData = (vacbot: any, EcoVacsAPI: any): void => {
   console.log('[Logs] hasVoiceReports: ' + vacbot.hasVoiceReports());
   console.log('[Logs] hasAutoEmptyStation: ' + vacbot.hasAutoEmptyStation());
   console.log(
-    '[Logs] isCanvasModuleAvailable: ' + EcoVacsAPI.isCanvasModuleAvailable()
+    '[Logs] isCanvasModuleAvailable: ' + ecovacsAPI.isCanvasModuleAvailable()
   );
 };

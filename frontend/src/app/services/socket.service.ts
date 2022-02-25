@@ -9,7 +9,13 @@ export class SocketService {
   constructor(private socket: Socket) {}
 
   public listenToEvent(messageType: string): Observable<any> {
-    return this.socket.fromEvent(messageType);
+    return this.socket
+      .fromEvent(messageType)
+      // .pipe(
+      //   tap((payload) =>
+      //     console.log('dispatch', messageType, ' with ', payload)
+      //   )
+      // );
   }
 
   public dispatch(messageType: string, payload: any) {
