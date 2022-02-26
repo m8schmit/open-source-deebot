@@ -1,4 +1,4 @@
-import { countries, EcoVacsAPI } from 'ecovacs-deebot/types';
+import { countries, EcoVacsAPI } from 'ecovacs-deebot';
 import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
 import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { machineIdSync } from 'node-machine-id';
