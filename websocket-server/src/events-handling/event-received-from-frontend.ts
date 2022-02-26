@@ -1,8 +1,8 @@
+import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
+import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
-import VacBot_950type from '../../types/ecovacs-deebot/library/950type/vacBot';
-import VacBot_non950type from '../../types/ecovacs-deebot/library/non950type/vacBot';
 import { logEvent } from '../utils/logger.utils';
 
 export const eventsReceivedFromFrontend = (

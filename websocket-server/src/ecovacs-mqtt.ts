@@ -1,8 +1,8 @@
-import { countries, EcoVacsAPI } from 'ecovacs-deebot';
+import { countries, EcoVacsAPI } from 'ecovacs-deebot/types';
+import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
+import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { machineIdSync } from 'node-machine-id';
 
-import VacBot_950type from '../types/ecovacs-deebot/library/950type/vacBot';
-import VacBot_non950type from '../types/ecovacs-deebot/library/non950type/vacBot';
 
 export const connectToDeebot = (): Promise<
   VacBot_950type | VacBot_non950type
