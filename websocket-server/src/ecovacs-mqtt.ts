@@ -3,7 +3,6 @@ import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
 import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { machineIdSync } from 'node-machine-id';
 
-
 export const connectToDeebot = (): Promise<
   VacBot_950type | VacBot_non950type
 > => {
@@ -11,13 +10,16 @@ export const connectToDeebot = (): Promise<
   const password = process.env.PASSWORD;
   const countryCode = process.env.COUNTRYCODE || 'cn';
 
-  const password_hash = EcoVacsAPI.md5(password);
+  const password_hash = password && EcoVacsAPI.md5(password);
   const device_id = EcoVacsAPI.getDeviceId(machineIdSync());
   const continent = countries[countryCode].continent.toLowerCase();
 
   const api = new EcoVacsAPI(device_id, countryCode, continent);
 
-  return new Promise(async (resolve, reject) =>
+  return new Promise(async (resolve, reject) => {
+    if (!account_id || !password_hash) {
+      return reject('account_id or password_hash is missing');
+    }
     api.connect(account_id, password_hash).then(async () =>
       api.devices().then((devicesList: any) => {
         const vacuum = devicesList[0];
@@ -39,8 +41,8 @@ export const connectToDeebot = (): Promise<
           return resolve(vacbot);
         });
       })
-    )
-  );
+    );
+  });
 };
 
 const logVacbotData = (
