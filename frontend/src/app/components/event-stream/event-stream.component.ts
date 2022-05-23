@@ -15,6 +15,7 @@ export class EventStreamComponent implements OnInit {
   ngOnInit() {
     this.socketService.dispatch('getName', {});
     this.socketService.dispatch('GetMaps', {});
+    this.socketService.dispatch('GetAutoEmpty', {});
   }
 
   ngOnDestroy(): void {}
@@ -35,6 +36,10 @@ export class EventStreamComponent implements OnInit {
   public returnToHome(): void {
     this.socketService.dispatch('Charge', {});
     this.getStatus();
+  }
+
+  public checkCleanStatus(cleanStatus: string): boolean {
+    return cleanStatus !== 'idle';
   }
 
   private getStatus(): void {

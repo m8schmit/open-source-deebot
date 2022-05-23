@@ -1,6 +1,6 @@
 <ion-header>
   <ng-container *ngIf="listenToEvent('NickName') | async as nameProperties">
-    <ion-toolbar class->
+    <ion-toolbar >
       <ion-title>{{ nameProperties.name }} </ion-title>
       <ng-container *ngIf="listenToEvent('ChargeState') | async as isCharging">
         <ng-container
@@ -43,7 +43,7 @@
       </ion-fab-button>
     </ion-fab>
     <ion-fab
-      *ngIf="cleanStatus !== 'pause'"
+      *ngIf="checkCleanStatus(cleanStatus)"
       vertical="bottom"
       horizontal="center"
       edge

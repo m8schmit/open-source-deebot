@@ -21,6 +21,17 @@ export const eventsReceivedFromFrontend = (
   setDefaultEvent('GetBatteryState');
   setDefaultEvent('GetChargeState');
   setDefaultEvent('GetCleanState');
+  setDefaultEvent('GetAutoEmpty');
+
+  socket.on('setAutoEmpty', (payload) => {
+    logEvent('receive', 'setAutoEmpty', payload);
+    let autoEmptyStatus = 0;
+    if (payload) {
+      autoEmptyStatus = 1;
+    }
+    logEvent('send', 'setAutoEmpty', autoEmptyStatus);
+    socket.emit('setAutoEmpty', autoEmptyStatus);
+  });
 
   socket.on('getName', (payload) => {
     logEvent('receive', 'getName', payload);
