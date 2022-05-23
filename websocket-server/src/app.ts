@@ -29,6 +29,7 @@ connectToDeebot().then((vacbot) => {
     vacbot.run('GetCleanState');
     vacbot.run('GetSchedule');
     vacbot.run('GetWaterBoxInfo');
+    vacbot.run('GetAutoEmpty');
 
     eventsReceivedFromAPI(vacbot, socket);
     eventsReceivedFromFrontend(vacbot, socket);

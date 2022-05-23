@@ -11,7 +11,7 @@ export const eventsReceivedFromAPI = (
 ) => {
   const setDefaultEvent = (
     eventName: string,
-    transformPayload?: (payload: any) => string
+    transformPayload?: (payload: any) => string | boolean
   ) =>
     vacBot.on(eventName, (payload: any) => {
       if (transformPayload) {
@@ -20,7 +20,8 @@ export const eventsReceivedFromAPI = (
       logEvent('send', eventName, payload);
       socket.emit(eventName, payload);
     });
-
+    
+  setDefaultEvent('AutoEmpty', (val) => val === 1 ? true : false);
   setDefaultEvent('ChargeState');
   setDefaultEvent('BatteryInfo');
   setDefaultEvent('CleanReport');
@@ -28,6 +29,7 @@ export const eventsReceivedFromAPI = (
   setDefaultEvent('Schedule', (val) => JSON.stringify(val));
   setDefaultEvent('MapDataObject', (val) => JSON.stringify(val));
   setDefaultEvent('MapImage', (val) => val['mapBase64PNG']);
+
 
   vacBot.on('Maps', ({ maps }: any) => {
     const mapID = maps.find(

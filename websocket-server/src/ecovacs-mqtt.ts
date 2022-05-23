@@ -32,7 +32,7 @@ export const connectToDeebot = (): Promise<
           continent
         );
 
-        logVacbotData(vacbot, EcoVacsAPI);
+        // logVacbotData(vacbot, EcoVacsAPI);
         // console.log(vacbot.ecovacs.bot.vacuum);
 
         vacbot.connect();

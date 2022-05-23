@@ -1,6 +1,6 @@
 <ion-header>
   <ng-container *ngIf="listenToEvent('NickName') | async as nameProperties">
-    <ion-toolbar >
+    <ion-toolbar>
       <ion-title>{{ nameProperties.name }} </ion-title>
       <ng-container *ngIf="listenToEvent('ChargeState') | async as isCharging">
         <ng-container
@@ -28,9 +28,15 @@
   <ng-container *ngIf="listenToEvent('Schedule') | async as SchedulesList">
     {{ SchedulesList }}
   </ng-container>
+  <div  class="auto-empty-toggle-container" *ngIf="{ status: (listenToEvent('AutoEmpty') | async) } as autoEmpty">
+    Auto Empty: <ion-toggle
+      [ngModel]="autoEmpty.status"
+      (click)="toggleAutoEmptyStatus(!autoEmpty.status)"
+    ></ion-toggle>
+  </div>
 
-  <ng-container *ngIf="listenToEvent('CleanReport') | async as cleanStatus">
-    {{ cleanStatus }}
+  <div *ngIf="listenToEvent('CleanReport') | async as cleanStatus">
+    Status: {{ cleanStatus }}
     <ion-fab
       *ngIf="cleanStatus === 'pause' || cleanStatus === 'idle'"
       vertical="bottom"
@@ -53,7 +59,7 @@
         <ion-icon (click)="pauseCleaning()" name="pause"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-  </ng-container>
+  </div>
 </ion-content>
 
 <ion-footer>

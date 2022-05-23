@@ -23,14 +23,14 @@ export const eventsReceivedFromFrontend = (
   setDefaultEvent('GetCleanState');
   setDefaultEvent('GetAutoEmpty');
 
-  socket.on('setAutoEmpty', (payload) => {
-    logEvent('receive', 'setAutoEmpty', payload);
+  socket.on('SetAutoEmpty', (payload) => {
+    logEvent('receive', 'SetAutoEmpty', payload);
     let autoEmptyStatus = 0;
     if (payload) {
       autoEmptyStatus = 1;
     }
-    logEvent('send', 'setAutoEmpty', autoEmptyStatus);
-    socket.emit('setAutoEmpty', autoEmptyStatus);
+    logEvent('send', 'SetAutoEmpty', autoEmptyStatus);
+    vacBot.run('SetAutoEmpty', autoEmptyStatus);
   });
 
   socket.on('getName', (payload) => {
