@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
+import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
+import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import VacBot_950type from '../types/ecovacs-deebot/library/950type/vacBot.js';
-import VacBot_non950type from '../types/ecovacs-deebot/library/non950type/vacBot.js';
 import { connectToDeebot } from './ecovacs-mqtt.js';
 import { eventsReceivedFromAPI } from './events-handling/event-received-from-api.js';
 import { eventsReceivedFromFrontend } from './events-handling/event-received-from-frontend.js';
@@ -29,6 +29,7 @@ connectToDeebot().then((vacbot) => {
     vacbot.run('GetCleanState');
     vacbot.run('GetSchedule');
     vacbot.run('GetWaterBoxInfo');
+    vacbot.run('GetAutoEmpty');
 
     eventsReceivedFromAPI(vacbot, socket);
     eventsReceivedFromFrontend(vacbot, socket);

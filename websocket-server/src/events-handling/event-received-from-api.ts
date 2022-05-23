@@ -1,8 +1,8 @@
+import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
+import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
-import VacBot_950type from '../../types/ecovacs-deebot/library/950type/vacBot';
-import VacBot_non950type from '../../types/ecovacs-deebot/library/non950type/vacBot';
 import { logEvent } from '../utils/logger.utils';
 
 export const eventsReceivedFromAPI = (
@@ -11,7 +11,7 @@ export const eventsReceivedFromAPI = (
 ) => {
   const setDefaultEvent = (
     eventName: string,
-    transformPayload?: (payload: any) => any
+    transformPayload?: (payload: any) => string | boolean
   ) =>
     vacBot.on(eventName, (payload: any) => {
       if (transformPayload) {
@@ -20,7 +20,8 @@ export const eventsReceivedFromAPI = (
       logEvent('send', eventName, payload);
       socket.emit(eventName, payload);
     });
-
+    
+  setDefaultEvent('AutoEmpty', (val) => val === 1 ? true : false);
   setDefaultEvent('ChargeState');
   setDefaultEvent('BatteryInfo');
   setDefaultEvent('CleanReport');
@@ -28,6 +29,7 @@ export const eventsReceivedFromAPI = (
   setDefaultEvent('Schedule', (val) => JSON.stringify(val));
   setDefaultEvent('MapDataObject', (val) => JSON.stringify(val));
   setDefaultEvent('MapImage', (val) => val['mapBase64PNG']);
+
 
   vacBot.on('Maps', ({ maps }: any) => {
     const mapID = maps.find(

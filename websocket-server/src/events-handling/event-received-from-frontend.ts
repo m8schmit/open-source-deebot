@@ -1,8 +1,8 @@
+import VacBot_950type from 'ecovacs-deebot/types/library/950type/vacBot';
+import VacBot_non950type from 'ecovacs-deebot/types/library/non950type/vacBot';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
-import VacBot_950type from '../../types/ecovacs-deebot/library/950type/vacBot';
-import VacBot_non950type from '../../types/ecovacs-deebot/library/non950type/vacBot';
 import { logEvent } from '../utils/logger.utils';
 
 export const eventsReceivedFromFrontend = (
@@ -21,6 +21,17 @@ export const eventsReceivedFromFrontend = (
   setDefaultEvent('GetBatteryState');
   setDefaultEvent('GetChargeState');
   setDefaultEvent('GetCleanState');
+  setDefaultEvent('GetAutoEmpty');
+
+  socket.on('SetAutoEmpty', (payload) => {
+    logEvent('receive', 'SetAutoEmpty', payload);
+    let autoEmptyStatus = 0;
+    if (payload) {
+      autoEmptyStatus = 1;
+    }
+    logEvent('send', 'SetAutoEmpty', autoEmptyStatus);
+    vacBot.run('SetAutoEmpty', autoEmptyStatus);
+  });
 
   socket.on('getName', (payload) => {
     logEvent('receive', 'getName', payload);
