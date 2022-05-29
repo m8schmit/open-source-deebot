@@ -26,3 +26,28 @@ services:
       - 'frontend:frontend'
     working_dir: /opt/app
     command: bash -c "npm install && npm run start"
+  nginx:
+    depends_on:
+      - bumper
+    image: nginx:alpine
+    ports:
+      - 443:443
+      - 5223:5223
+      - 8007:8007
+      - 8883:8883
+    volumes:
+      - ./nginx/:/etc/nginx:ro
+  bumper:
+    image: bmartin5692/bumper
+    restart: unless-stopped
+    environment:
+      PUID: 1000
+      PGID: 1000
+      # TZ: Europe/Rome
+      BUMPER_ANNOUNCE_IP: ${CURRENT_IP}
+      BUMPER_LISTEN: 0.0.0.0
+      # BUMPER_DEBUG: "true"
+      LOG_TO_STDOUT: "true"
+    volumes:
+      - ./config:/bumper/data
+      - ./certs:/bumper/certs
